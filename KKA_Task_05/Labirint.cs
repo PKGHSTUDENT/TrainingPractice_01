@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.ComponentModel;
+using System.Diagnostics;
 
 namespace KKA_Task_05
 {
@@ -15,6 +16,7 @@ namespace KKA_Task_05
 
         public string labirintSolution;
 
+        public int[,] labirintCooridnatsSolution;
         public char[,] map;
 
         public void MainMenu()
@@ -44,10 +46,12 @@ namespace KKA_Task_05
         {
             Console.Clear();
             LoadMap("1");
+            SetProgressBar();
             SetWindow(100, 50);
 
             Console.SetCursorPosition(startPositionX, startPositionY);
             bool flag = true;
+            bool win = true;
             while (flag)
             {
                 ConsoleKeyInfo key = Console.ReadKey(true);
@@ -56,6 +60,7 @@ namespace KKA_Task_05
                 {
                     ShowRightWay();
                     flag = false;
+                    win = false;
                 }
                 else
                     Step(key);
@@ -64,8 +69,14 @@ namespace KKA_Task_05
                     flag = false;
             }
 
+            Console.SetCursorPosition(0, endPositionY + 7);
+            ProgressBar.WriteProgressBar(100, true);
+
             Console.SetCursorPosition(0, 40);
-            Console.WriteLine("You win! Press any key to continue. ");
+            if (win)
+                Console.WriteLine("You win! Press any key to continue.");
+            else Console.WriteLine("You took a hint and that's why we can't give you a win:///\n" +
+                "Press any key to continue.");
             Console.ReadLine();
 
             Console.Clear();
@@ -116,6 +127,10 @@ namespace KKA_Task_05
 
         public void DrawPosition(int nx, int ny)
         {
+            
+            ProgressBar.WriteProgressBar(Convert.ToInt16(GetProcent() / labirintCooridnatsSolution.GetLength(0) * 100), true);
+
+
             Console.SetCursorPosition(X, Y);
             Console.Write(" ");
 
@@ -137,12 +152,15 @@ namespace KKA_Task_05
 
         public void ShowRightWay()
         {
+            X = startPositionX;
+            Y = startPositionY;
             RightWayKey();
         }
 
-        public void RightWayKey()
+        public void RightWayKey(bool load = false)
         {
             int tx = 0, ty = 0;
+            int i = 0;
             foreach (char c in labirintSolution)
             {
                 switch (c)
@@ -164,8 +182,20 @@ namespace KKA_Task_05
                         ty = 1;
                         break;
                 }
-                DrawRightWay(tx, ty);
+                if (load)
+                {
+                    AddRightPosition(tx, ty, i++);
+                } else
+                    DrawRightWay(tx, ty);
             }
+        }
+
+        public void AddRightPosition(int tx, int ty, int i)
+        {
+            labirintCooridnatsSolution[i, 0] = X;
+            labirintCooridnatsSolution[i, 1] = Y;
+            X += tx;
+            Y += ty;
         }
 
         public void DrawRightWay(int nx, int ny)
@@ -213,7 +243,15 @@ namespace KKA_Task_05
             X = startPositionX;
             Y = startPositionY;
 
+            labirintCooridnatsSolution = new int[labirintSolution.Length, 2];
+            RightWayKey(true);
+
+            X = startPositionX;
+            Y = startPositionY;
+
             PrintMap();
+
+            
         }
 
         public void PrintMap()
@@ -226,6 +264,30 @@ namespace KKA_Task_05
                 }
                 Console.WriteLine();
             }
+        }
+
+        public double GetProcent()
+        {
+            int procent = 1;
+
+            for (int i = 0; i < labirintCooridnatsSolution.GetLength(0); i++)
+            {
+                if (labirintCooridnatsSolution[i, 0] == X &&
+                labirintCooridnatsSolution[i, 1] == Y)
+                {
+                    procent = i;
+                    break;
+                }
+            }
+
+            if (procent == 0) { return 1; }
+            return procent;
+        }
+
+        public void SetProgressBar()
+        {
+            ProgressBar.x = 0;
+            ProgressBar.y = endPositionY + 7;
         }
     }
 }
