@@ -13,16 +13,10 @@
         {
             Console.WriteLine($"Course: 1 crystal = {_courseExhangeGoldToCrystal} ");
         }
-        public bool ExhangeGold(int crystalCount)
+        public void ExhangeGold(int crystalCount)
         {
-            if (Gold >= _courseExhangeGoldToCrystal * crystalCount)
-            {
-                Gold = Gold - (_courseExhangeGoldToCrystal * crystalCount);
-                Crystals = crystalCount;
-            }
-            else
-                return false;
-            return true;
+            Gold = (Gold >= _courseExhangeGoldToCrystal * crystalCount) ? Gold - (_courseExhangeGoldToCrystal * crystalCount) : Gold;
+            Crystals = (Gold >= _courseExhangeGoldToCrystal * crystalCount) ? Crystals + crystalCount : Crystals;
         }
 
         public void PrintWallet()

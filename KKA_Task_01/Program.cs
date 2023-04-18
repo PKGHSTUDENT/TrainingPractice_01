@@ -24,10 +24,7 @@
                     case 2:
                         wallet.PrintRate();
                         Console.Write("Enter the number of crystals you want to buy: ");
-                        if (wallet.ExhangeGold(Convert.ToInt32(Console.ReadLine())))
-                            Console.WriteLine("You have successfully acquired the crystals!");
-                        else
-                            Console.WriteLine("You don't have enough gold to buy crystals.");
+                        wallet.ExhangeGold(Convert.ToInt32(Console.ReadLine()));
                         break;
                     case 3:
                         wallet.PrintWallet();

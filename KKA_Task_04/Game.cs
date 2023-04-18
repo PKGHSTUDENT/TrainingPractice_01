@@ -60,7 +60,7 @@
         public void RegenerateCharacters()
         {
             hero = new Hero("Random");
-            boss = new Boss("Boss");
+            boss = new Boss("Random");
         }
 
         public void StartGame()
