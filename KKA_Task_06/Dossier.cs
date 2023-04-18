@@ -13,8 +13,6 @@ namespace KKA_Task_06
         public void OpenDossier()
         {
             GenerateDossier();
-            Console.WriteLine(fullnames.Length);
-            Console.WriteLine(dossier.Length);
             Navigate();
         }
 
